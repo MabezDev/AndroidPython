@@ -203,6 +203,7 @@ def playGame(win, android, apples, scoreDisplay, name):
                 elif(key=="SPEED"):
                     ACTIVE_TEXT_OBJECTS[key] = generateMessage(key,0.1,0.9)
                 elif(key=="DOUBLE-POINTS"):
+                    print("Double Points")
                     ACTIVE_TEXT_OBJECTS[key] = generateMessage(key,0.15,0.85)
                 elif(key=="MAGNET"):
                     ACTIVE_TEXT_OBJECTS[key] = generateMessage(key,0.10,0.80)
@@ -363,6 +364,7 @@ def playGame(win, android, apples, scoreDisplay, name):
     for key in ACTIVE_TEXT_OBJECTS:
         if(ACTIVE_TEXT_OBJECTS[key]!=None):
             ACTIVE_TEXT_OBJECTS[key].undraw()
+            ACTIVE_TEXT_OBJECTS[key] = None
         #reset buffs
         if(ACTIVE[key]):
             ACTIVE[key] = False
@@ -410,25 +412,24 @@ def retry(win):
             return False
 
 
-    # need to config spawn probabilites once testig is done
 def spawnBonusApple(win):
 
     ''' Randomly generates apples, with a chance to spawn bonus apples. '''
 
     colour = ""
     random1 = random()
-    if(random1 <= 0.15):
+    if(random1 <= 0.03):
         colour = "orange" #Speed Bonus
-    elif(random1 <= 0.30 and random1 >=0.15):
+    elif(random1 <= 0.06 and random1 >=0.03):
         colour = "green" #Reflect Bonus
-    elif(random1 <= 0.50 and random1 >=0.30):
+    elif(random1 <= 0.09 and random1 >=0.06):
         colour = "blue" #DOUBLE-POINTS
-    elif(random1 <= 0.65 and random1 >=0.50):
-        colour = "black"
-    elif(random1 <= 0.70 and random1 >=0.65):
-        colour = "purple"
-    elif(random1 <= 0.90 and random1 >=0.70):
-        colour = "yellow"
+    elif(random1 <= 0.12 and random1 >=0.09):
+        colour = "black" #Explosive apple
+    elif(random1 <= 0.15 and random1 >=0.12):
+        colour = "purple" #Magnet apple
+    elif(random1 <= 0.18 and random1 >=0.15):
+        colour = "yellow" #Reverse controls apple
     else:
         colour="red"
     #print("Adding {0} apple.".format(colour))

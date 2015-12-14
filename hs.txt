@@ -1,3 +1,10 @@
-asdasd,50
-asdsad,100
-asdsad,150
+asda,550
+asdad,600
+asdad,700
+Jimmy,750
+asda,750
+asda,800
+asda,1150
+asda,1150
+asda,1350
+asda,3750
