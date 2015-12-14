@@ -14,6 +14,8 @@ TIMER_DEFAULTS = {"REFLECT":10,"SPEED":15,"DOUBLE-POINTS":20,"MAGNET":10,"REVERS
 ACTIVE_TIMES = {"REFLECT":0,"SPEED":0,"DOUBLE-POINTS":0,"MAGNET":0,"REVERSE":0}
 ACTIVE_TEXT_OBJECTS = {"REFLECT":None,"SPEED":None,"DOUBLE-POINTS":None,"MAGNET":None,"REVERSE":None}
 
+HIGH_SCORES_FILE = "hs.txt"
+
 
 '''
 
@@ -45,6 +47,7 @@ def main(win,name=None,menuDone=False):
         name = getName(win)
     #load scores into memory
     loadHighScores()
+
     #main loop
     while menuDone == False:
         menuDone = drawMenu(win)
@@ -63,6 +66,8 @@ def main(win,name=None,menuDone=False):
 def getName(win):
 
     ''' returns the name of the player currently playing, also gives the option to exit game. '''
+
+    print("Going to getNameState.")
 
     valid = False
     enterName = generateMessage("Enter Name and click the screen once entered",0.5,0.8)
@@ -170,6 +175,8 @@ def playGame(win, android, apples, scoreDisplay, name):
     retardation = 0.00000001
     Max_Apples = 8
     lost = False
+
+    print("Going to playState.")
 
     while not lost:
 
@@ -388,6 +395,8 @@ def retry(win):
 
     ''' Scene for asking player if they want to play again. '''
 
+    print("Going to retryState.")
+
     myObjects = []
     myObjects.append(generateMessage("Play again?",0.5,0.8,"red",36))
     myObjects.append(generateMessage("Yes",0.25,0.5))
@@ -459,22 +468,22 @@ def generateMessage(text,x,y,colour="green",size=None):
 
 def loadHighScores():
 
-    ''' Loads high scores in from hs.txt into memory for viewing and manipulation. '''
+    ''' Loads high scores in from HIGH_SCORES_FILE into memory for viewing and manipulation. '''
 
     try:
-        highScoreFile = open("hs.txt","r")
+        highScoreFile = open(HIGH_SCORES_FILE,"r")
     except Exception:
         print("No Hs file found, creating one now.")
-        highScoreFile = open("hs.txt","w")
+        highScoreFile = open(HIGH_SCORES_FILE,"w")
         time.sleep(0.2)
-        highScoreFile = open("hs.txt","r")
+        highScoreFile = open(HIGH_SCORES_FILE,"r")
     lines = highScoreFile.readlines()
     if(len(lines) > 0):
         for line in lines:
             vars = line.strip("\n").split(",")
-            print(vars)
             HIGH_SCORES.append(int(vars[1]))
             HIGH_SCORES_NAMES.append(vars[0])
+        print("Loaded scores from HIGH_SCORES_FILE")
     else:
         print("No Scores Found")
     highScoreFile.close()
@@ -494,13 +503,14 @@ def saveHighScore(Score,Name):
     #check if new HS
     try:
         #blank the file
-        open('hs.txt', 'w').close()
+        open(HIGH_SCORES_FILE, 'w').close()
         time.sleep(0.5)
-        file = open("hs.txt","w")
+        file = open(HIGH_SCORES_FILE,"w")
     except Exception:
         print("No HS File")
-    #sort the scores so we only have to check the lowest score to see if can be added
+    #Sort the scores so we only have to check the lowest score to see if can be added
     sortScores()
+    #Make sure there are high scores to compare, if not just write this new score to the file
     if(len(HIGH_SCORES) > 0):
             #check if its a high score
             #check highest score, or check lowest score?
@@ -516,15 +526,17 @@ def saveHighScore(Score,Name):
                 HIGH_SCORES.append(Score)
                 HIGH_SCORES_NAMES.append(Name)
     else:
-        file.write(Name+","+str(Score))
-
-    #rewrite the scores back into the file.
+        # No scores found in file, must write this one proving it is greater than 0
+        if(Score > 0):
+            newHiScore = True
+            file.write(Name+","+str(Score))
+    #Write the scores in memory, back into the file.
     for j in range(len(HIGH_SCORES)):
         string = HIGH_SCORES_NAMES[j]+","+str(HIGH_SCORES[j])+"\n"
         file.write(string)
     file.close()
 
-    print(HIGH_SCORES,HIGH_SCORES_NAMES)
+    print("Saved scores to HIGH_SCORES_FILE successfully.")
 
     return newHiScore
 
@@ -532,6 +544,8 @@ def saveHighScore(Score,Name):
 def drawMenu(win):
 
     ''' Main menu function, return true when the game is ready to play. '''
+
+    print("Going to menuState.")
 
     x = 0.5
     myObjects = []
@@ -557,7 +571,7 @@ def drawMenu(win):
                 text.undraw()
 
             highScoresDone = False
-            print("Going to HS.")
+            print("Going to highScoreState.")
             while highScoresDone == False:
                 highScoresDone = showHighScore(win)
         elif(clicks.x >= (x-0.5) and clicks.x < (x + 0.7) and clicks.y >= 0.30 and clicks.y <= 0.4):
